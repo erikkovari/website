@@ -1,48 +1,56 @@
-import React from "react";
-import scrollImg from "./assets/down-arrow.svg";
+import React, { useState, useEffect } from "react";
+
+import NavBar from "./components/navBar";
+
+import HomePage from "./pages/home";
+import AboutMePage from "./pages/aboutMe";
+
 import "./App.css";
-
-function NavigationBar() {
-	const onClick = () => {
-		console.log("hello");
-	};
-	return (
-		<div className="nav-bar">
-			<button className="nav" onClick={() => onClick()}>
-				Home
-			</button>
-			<button className="nav">About me</button>
-			<button className="nav">Portfolio</button>
-		</div>
-	);
-}
-
-function Home() {
-	return (
-		<section id="home" className="home">
-			<div className="home-text">
-				<div className="title">
-					Hi, I'm <div className="title primary">Erik Kovari</div>.
-				</div>
-				<div className="title">
-					I like to solve the problems of <span className="title primary">today</span> and{" "}
-					<span className="title primary">tomorrow</span>.
-				</div>
-			</div>
-
-			<button>
-				<div className="text">Take a look</div>
-				<img className="scroll-img" src={scrollImg} />
-			</button>
-		</section>
-	);
-}
+//todo create context to store config for animation
 
 function App() {
+	const [pages, setPages] = useState([
+		{ name: "home", title: "home", ref: React.createRef() },
+		{ name: "about-me", title: "about me", ref: React.createRef() },
+		{ name: "portfolio", title: "portfolio", ref: React.createRef() },
+		{ name: "testimonials", title: "testimonials", ref: React.createRef() },
+	]);
+	const [navbarRef, setNavbarRef] = useState(React.createRef());
+	const [navbarFixed, setNavbarFixed] = useState(false);
+
+	const [activePage, setActivePage] = useState("home");
+
+	const navToPage = (toPage) => {
+		console.time("look");
+		const pageRef = pages.find((page) => page.name === toPage).ref;
+		if (pageRef.current) {
+			window.scrollTo({
+				top: pageRef.current.offsetTop - navbarRef.current.clientHeight,
+				left: 0,
+				behavior: "smooth",
+			});
+			setActivePage(toPage);
+		} else {
+			console.log("no current");
+		}
+		console.timeEnd("look");
+	};
+
 	return (
 		<div className="App">
-			<Home />
-			<NavigationBar />
+			<HomePage
+				ref={pages.find((page) => page.name === "home").ref}
+				navigate={(page) => navToPage(page)}
+			/>
+			<NavBar
+				ref={navbarRef}
+				pages={pages}
+				buttonClicked={(page) => navToPage(page)}
+				fixed={navbarFixed}
+			/>
+			<AboutMePage ref={pages.find((page) => page.name === "about-me").ref} />
+			<AboutMePage ref={pages.find((page) => page.name === "portfolio").ref} />
+			<AboutMePage ref={pages.find((page) => page.name === "testimonials").ref} />
 			<div>
 				Icons made by{" "}
 				<a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">
@@ -54,6 +62,13 @@ function App() {
 					www.flaticon.com
 				</a>
 			</div>
+			<a target="_blank" href="https://icons8.com/icons/set/menu">
+				Menu icon
+			</a>{" "}
+			icon by{" "}
+			<a target="_blank" href="https://icons8.com">
+				Icons8
+			</a>
 		</div>
 	);
 }

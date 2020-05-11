@@ -6,6 +6,8 @@
 
 	--large-size: 2.5rem;
 	--medium-size: 1.5rem;
+
+	z-index: 0;
 }
 
 div {
@@ -69,8 +71,9 @@ button {
 }
 /* Button styles end */
 
-section#home {
-	height: 100vh;
+section {
+	z-index: 1;
+	height: 95vh;
 	width: 100vw;
 	align-items: center;
 	display: flex;
@@ -113,4 +116,21 @@ section#home {
 	margin-top: 1rem;
 	height: 2rem;
 	filter: invert(100%);
+}
+
+.animated-container {
+	position: absolute;
+	top: 0;
+	width: 100vw;
+	height: 95vh;
+	background-color: transparent;
+	overflow: hidden;
+}
+.animated-item {
+	position: absolute;
+	transform-style: preserve-3d;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: rgba(255, 255, 255, 0.5);
 }
